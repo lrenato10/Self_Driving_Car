@@ -1,5 +1,5 @@
 # Ignore all Google Drive files
-*.ini
+desktop.ini
 
 # Ignore dataset folder
 Object_Detection_Project/data/waymo/

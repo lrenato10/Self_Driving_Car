@@ -36,11 +36,11 @@ data/waymo/
     - test - contains 3 files to test your model and create inference videos
 ```
 The `training_and_validation` folder contains file that have been downsampled: we have selected one every 10 frames from 10 fps videos. The `testing` folder contains frames from the 10 fps video without downsampling.
-```
 
 To split this `training_and_validation` data into `train`, and `val` you can use the `create_splits.py` file.
 
 The `experiments` folder is organized as follow:
+
 ```
 experiments/
     - label_map.pbtxt
@@ -109,6 +109,7 @@ python edit_config.py --train_dir /home/workspace/data/train/ --eval_dir /home/w
 ```
 A new config file has been created, `pipeline_new.config`. Copy `pipeline_new.config` in experiments/reference/.
 We will use this pipeline to train our model.
+The `edit_config.py` will generate the pipeline of SSD architecture, but it is also possible to use `edit_config_frcnn.py` to generate the Faster-RCNN architecture pipeline
 
 ### Training
 
