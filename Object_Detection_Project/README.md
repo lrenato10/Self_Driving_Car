@@ -192,7 +192,8 @@ python inference_video.py --labelmap_path label_map.pbtxt --model_path experimen
 
 #### Final Result
 
-It is possible to see the final result of the Object Detection of vehicle, pedestrian and cyclist in the three following GIFs:
+It is possible to see the final result of the Object Detection of vehicle, pedestrian and cyclist in the four following GIFs:
 ![gif1](output_gif/animation1.gif)
 ![gif2](output_gif/animation2.gif)
-![gif3](output_gif/animation8.gif)
+![gif3](output_gif/animation3.gif)
+![gif4](output_gif/animation8.gif)

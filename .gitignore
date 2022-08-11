@@ -15,6 +15,3 @@ Object_Detection_Project/experiments/pretrained_model/
 # Ignore test files
 .test
 .verify_GPU
-
-# Ignore gifs
-.animation2.gif
