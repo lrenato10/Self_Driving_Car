@@ -68,7 +68,8 @@ We can see the result of this function displaying 10 images in the figures below
 After see many different images from this dataset we can conclude that all images are visible, with day, night, sunny and rainy conditions. Furthermore, without miss classification and repeated bounding boxes for the same object. We also visualized the three classes with their respective colors, however it is visible the higher quantity of vehicles.
 
 In the `Exploratory Data Analysis` notebook there is also a statistical analysis of the data. In the following plots we can see the quantity of objects for each class, the distribution of vehicles, pedestrians and cyclists, and there is also plots with the mean bounding box width, height and area for each class.
-With this data we can conclude that cars outnumber pedestrians, and pedestrians outnumber cyclists. This information is very relevant because it can bias the model to classify the object as a vehicle because it is more probable. We can also conclude that there are normally between 0 and 35 vehicles per image. And for cyclists and pedestrians normally there aren't any.
+With this data we can conclude that cars outnumber pedestrians, and pedestrians outnumber cyclists. This information is very relevant because it can bias the model to classify the object as a vehicle because it is more probable.
+We can also conclude that there are normally between 0 and 35 vehicles per image. And for cyclists and pedestrians normally there aren't any. Furthermore, we can conclude that vehicles have on average similar height and width, so the bounding box is square, and pedestrians are higher than wide, as expected
 
 ![img11](images/img11.png)![img12](images/img12.png)![img13](images/img13.png)![img14](images/img14.png)![img15](images/img15.png)![img16](images/img16.png)
 
@@ -105,15 +106,21 @@ rm -rf faster_rcnn_resnet50_v1_640x640_coco17_tpu-8.tar.gz
 
 We need to edit the config files to change the location of the training and validation files, as well as the location of the label_map file, pretrained weights. We also need to adjust the batch size. To do so, run the following:
 ```
-python edit_config.py --train_dir /home/workspace/data/train/ --eval_dir /home/workspace/data/val/ --batch_size 2 --checkpoint /home/workspace/experiments/pretrained_model/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/checkpoint/ckpt-0 --label_map /home/workspace/experiments/label_map.pbtxt
+python edit_config.py --train_dir data/waymo/train/ --eval_dir data/waymo/val/ --batch_size 2 --checkpoint experiments/pretrained_model/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/checkpoint/ckpt-0 --label_map experiments/label_map.pbtxt
+```
+The `edit_config.py` will generate the pipeline of SSD architecture, but it is also possible to use `edit_config_frcnn.py` to generate the Faster-RCNN architecture pipeline
+```
+python edit_config_frcnn.py --train_dir data/waymo/train/ --eval_dir data/waymo/val/ --batch_size 2 --checkpoint experiments/pretrained_model/faster_rcnn_resnet50_v1_640x640_coco17_tpu-8/checkpoint/ckpt-0 --label_map experiments/label_map.pbtxt
 ```
 A new config file has been created, `pipeline_new.config`. Copy `pipeline_new.config` in experiments/reference/.
 We will use this pipeline to train our model.
-The `edit_config.py` will generate the pipeline of SSD architecture, but it is also possible to use `edit_config_frcnn.py` to generate the Faster-RCNN architecture pipeline
 
 ### Training
 
-You will now launch your very first experiment with the Tensorflow object detection API. Move the `pipeline_new.config` to the `/home/workspace/experiments/reference` folder. Now launch the training process:
+### Reference experiment
+
+To launch the Tensorflow object detection API we can execute the `model_main_tf2.py` file. The most important file to pass as parameter is the path of `pipeline_new.config`, in this file we can change all relevant information of the model, such as data augmentation, type of architecture, steps of training, batch size, kernel size, number of convolution layer and layer before classification. We won't train the model from scratch, so we will use fine tuning to start our model as explained in the `pipeline.config` file. 
+To launch the training process:
 * a training process:
 ```
 python experiments/model_main_tf2.py --model_dir=experiments/reference/ --pipeline_config_path=experiments/reference/pipeline_new.config
@@ -129,15 +136,36 @@ python experiments/model_main_tf2.py --model_dir=experiments/reference/ --pipeli
 
 To monitor the training, you can launch a tensorboard instance by running `python -m tensorboard.main --logdir experiments/reference/`. You will report your findings in the writeup.
 
-### Improve the performances
+This reference model will be used as a reference of performance for the next models.
 
-Most likely, this initial experiment did not yield optimal results. However, you can make multiple changes to the config file to improve this model. One obvious change consists in improving the data augmentation strategy. The [`preprocessor.proto`](https://github.com/tensorflow/models/blob/master/research/object_detection/protos/preprocessor.proto) file contains the different data augmentation method available in the Tf Object Detection API. To help you visualize these augmentations, we are providing a notebook: `Explore augmentations.ipynb`. Using this notebook, try different data augmentation combinations and select the one you think is optimal for our dataset. Justify your choices in the writeup.
 
-Keep in mind that the following are also available:
-* experiment with the optimizer: type of optimizer, learning rate, scheduler etc
-* experiment with the architecture. The Tf Object Detection API [model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md) offers many architectures. Keep in mind that the `pipeline.config` file is unique for each architecture and you will have to edit it.
+#### Improve the performances
 
-**Important:** If you are working on the workspace, your storage is limited. You may to delete the checkpoints files after each experiment. You should however keep the `tf.events` files located in the `train` and `eval` folder of your experiments. You can also keep the `saved_model` folder to create your videos.
+Most likely, this initial experiment did not yield optimal results. However, it is possible to make multiple changes to the config file to improve this model. One obvious change consists in improving the data augmentation strategy. The [`preprocessor.proto`](https://github.com/tensorflow/models/blob/master/research/object_detection/protos/preprocessor.proto) file contains the different data augmentation method available in the Tf Object Detection API.
+
+To visualize the data augmentations, it is possible to use the  `Explore augmentations.ipynb` notebook.
+Many different data augmentation strategies was used, horizontal flip to generate the same image but symmetric increasing the number of images, crop image to zoom a part of the image and create a new image, convert the RGB image in grayscale to make the network learn from the shape of the objects instead of the colors, adjust brightness to simulate a more or less sunny condition, adjust contrast to increase or decrease the difference between the objects, adjust saturation to increase or decrease the color sensitivity of the model.
+We can see in the following figures some images with low saturation, grayscale, high contrast and saturation, it is important to check the images before the data augmentation because if we overdo it we can destroy the images. 
+
+![img17](images/img17.png)![img18](images/img18.png)![img19](images/img19.png)![img20](images/img20.png)![img21](images/img21.png)![img22](images/img22.png)
+
+We also tried many other techniques to improve the performance, such as changing the optimizer, changing the learning rate, changing the architecture [model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf2_detection_zoo.md) and increasing the steps.
+
+Each test is stored in the `experiments/experimentX/` folder, due to the memory it is not possible to save all models in github, so I saved only the config, test and validation files.
+
+* In the follow figures we can see the result of the reference model:
+![img23](images/img23.png)![img24](images/img24.png)![img25](images/img25.png)
+
+* In the follow figures we can see the result of the experiment0 (data augmentation):
+![img26](images/img26.png)![img27](images/img27.png)![img28](images/img28.png)
+
+* In the follow figures we can see the result of the experiment92 (10 k steps and brightness data augmentation):
+![img29](images/img29.png)![img30](images/img30.png)![img31](images/img31.png)
+
+* In the follow figures we can see the result of the experiment12 (Faster-RCNN):
+![img35](images/img35.png)![img36](images/img36.png)![img37](images/img37.png)
+
+We can see the positive impact in the precision and recall by using the data augmentation, the regularization loss is higher but this loss is just to prevent overfitting, it is not related with the performance of the model. Furthermore as the training model is in underfitting, when we increase the steps the performance also increase. Moreover, the performance of the Faster-RCNN is better due to its complexity, so the training already starts better than the SSD ones. We can`t see a visible improvement of Faster-RCNN loss but the final result is better because the pre-trained model has better performance.
 
 
 ### Creating an animation
