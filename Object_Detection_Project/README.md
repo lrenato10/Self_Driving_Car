@@ -1,55 +1,22 @@
 # Object Detection in an Urban Environment
 
-## Data
+## Project overview
+Object detection is a crucial  role in self-driving cars. In this project we will focus on two main parts, the dataset and the training and validation of our model.
+The dataset has a key role in machine learning, because our model learns with supervised learning, so it will use our labeled data to generalize the information from the data. Due to this fact it is important to have representative images in many different conditions, which the car may find in real life and we also need to give a dataset with the number of objects per class as close as possible in order to avoid generating a bias in the model prediction.
+Furthermore, the training and validation part is also a crucial part. Because there are several possibilities of different architectures and the engineer needs to choose the best one to improve the final performance playing with the trade-off of overfitting and underfitting. 
+
+## Set up
+
+### Requirements
+
+To install the required packages there is a container file `Dockerfile` and a `requirements.txt` in the folder `build`, more details available in the README in this folder.
+
+
+### Data
 
 For this project, we will be using data from the [Waymo Open dataset](https://waymo.com/open/).
 
 [OPTIONAL] - The files can be downloaded directly from the website as tar files or from the [Google Cloud Bucket](https://console.cloud.google.com/storage/browser/waymo_open_dataset_v_1_2_0_individual_files/) as individual tf records. We have already provided the data required to finish this project in the workspace, so you don't need to download it separately.
-
-## Structure
-
-### Data
-
-The data you will use for training, validation and testing is organized as follow:
-```
-/home/workspace/data/waymo
-	- training_and_validation - contains 97 files to train and validate your models
-    - train: contain the train data (empty to start)
-    - val: contain the val data (empty to start)
-    - test - contains 3 files to test your model and create inference videos
-```
-The `training_and_validation` folder contains file that have been downsampled: we have selected one every 10 frames from 10 fps videos. The `testing` folder contains frames from the 10 fps video without downsampling.
-```
-You will split this `training_and_validation` data into `train`, and `val` sets by completing and executing the `create_splits.py` file.
-
-
-### Experiments
-The experiments folder will be organized as follow:
-```
-experiments/
-    - pretrained_model/
-    - exporter_main_v2.py - to create an inference model
-    - model_main_tf2.py - to launch training
-    - reference/ - reference training with the unchanged config file
-    - experiment0/ - create a new folder for each experiment you run
-    - experiment1/ - create a new folder for each experiment you run
-    - experiment2/ - create a new folder for each experiment you run
-    - label_map.pbtxt
-    ...
-```
-
-## Prerequisites
-
-### Local Setup
-
-For local setup if you have your own Nvidia GPU, you can use the provided Dockerfile and requirements in the [build directory](./build).
-
-Follow [the README therein](./build/README.md) to create a docker container and install all prerequisites.
-
-### Download and process the data
-
-**Note:** ”If you are using the classroom workspace, we have already completed the steps in the section for you. You can find the downloaded and processed files within the `/home/workspace/data/preprocessed_data/` directory. Check this out then proceed to the **Exploratory Data Analysis** part.
-
 The first goal of this project is to download the data from the Waymo's Google Cloud bucket to your local machine. For this project, we only need a subset of the data provided (for example, we do not need to use the Lidar data). Therefore, we are going to download and trim immediately each file. In `download_process.py`, you can view the `create_tf_example` function, which will perform this processing. This function takes the components of a Waymo Tf record and saves them in the Tf Object Detection api format. An example of such function is described [here](https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/training.html#create-tensorflow-records). We are already providing the `label_map.pbtxt` file.
 
 You can run the script using the following command:
@@ -57,42 +24,91 @@ You can run the script using the following command:
 python download_process.py --data_dir {processed_file_location} --size {number of files you want to download}
 ```
 
-You are downloading 100 files (unless you changed the `size` parameter) so be patient! Once the script is done, you can look inside your `data_dir` folder to see if the files have been downloaded and processed correctly.
+### Structure
 
-### Classroom Workspace
+The data used for training, validation and testing is organized in `data` folder as follow:
 
-In the classroom workspace, every library and package should already be installed in your environment. You will NOT need to make use of `gcloud` to download the images.
+```
+data/waymo/
+    - training_and_validation - contains 96 files to train and validate your models
+    - train: contain the train data
+    - val: contain the val data
+    - test - contains 3 files to test your model and create inference videos
+```
+The `training_and_validation` folder contains file that have been downsampled: we have selected one every 10 frames from 10 fps videos. The `testing` folder contains frames from the 10 fps video without downsampling.
+```
 
-## Instructions
+To split this `training_and_validation` data into `train`, and `val` you can use the `create_splits.py` file.
 
-### Exploratory Data Analysis
+The `experiments` folder is organized as follow:
+```
+experiments/
+    - label_map.pbtxt
+    - reference/... reference training with the unchanged config file
+    - exporter_main_v2.py: to create an inference model
+    - model_main_tf2.py: to launch training
+    - experiment0/... create a new folder for each experiment runned
+    - experiment1/...
+    - experimentX/...
+    - pretrained-model/: contains the checkpoints of the pretrained models (FRCNN  and SDD).
+```
 
-You should use the data already present in `/home/workspace/data/waymo` directory to explore the dataset! This is the most important task of any machine learning project. To do so, open the `Exploratory Data Analysis` notebook. In this notebook, your first task will be to implement a `display_instances` function to display images and annotations using `matplotlib`. This should be very similar to the function you created during the course. Once you are done, feel free to spend more time exploring the data and report your findings. Report anything relevant about the dataset in the writeup.
 
-Keep in mind that you should refer to this analysis to create the different spits (training, testing and validation).
+##Dataset
+
+### Dataset Analysis
+
+In the `Exploratory Data Analysis` notebook it is possible to explore the dataset from the tfrecord format. By using the `display_images` function it is possible to visualize a frame of the dataset with the bounding box with different colors for each class, reto to vehicle, blue to pedestrian and green to cyclist. Hence, it is possible to use this function to visualize the imagens from the dataset and analyze the quality of them.
+
+We can see the result of this function displaying 10 images in the figures below:
+
+![img1](images/img1.png)![img2](images/img2.png)![img3](images/img3.png)![img4](images/img4.png)![img5](images/img5.png)![img6](images/img6.png)![img7](images/img7.png)![img8](images/img8.png)![img9](images/img9.png)![img10](images/img10.png)
+
+
+After see many different images from this dataset we can conclude that all images are visible, with day, night, sunny and rainy conditions. Furthermore, without miss classification and repeated bounding boxes for the same object. We also visualized the three classes with their respective colors, however it is visible the higher quantity of vehicles.
+
+In the `Exploratory Data Analysis` notebook there is also a statistical analysis of the data. In the following plots we can see the quantity of objects for each class, the distribution of vehicles, pedestrians and cyclists, and there is also plots with the mean bounding box width, height and area for each class.
+With this data we can conclude that cars outnumber pedestrians, and pedestrians outnumber cyclists. This information is very relevant because it can bias the model to classify the object as a vehicle because it is more probable. We can also conclude that there are normally between 0 and 35 vehicles per image. And for cyclists and pedestrians normally there aren't any.
+
+![img11](images/img11.png)![img12](images/img12.png)![img13](images/img13.png)![img14](images/img14.png)![img15](images/img15.png)![img16](images/img16.png)
 
 
 ### Create the training - validation splits
-In the class, we talked about cross-validation and the importance of creating meaningful training and validation splits. For this project, you will have to create your own training and validation sets using the files located in `/home/workspace/data/waymo`. The `split` function in the `create_splits.py` file does the following:
-* create three subfolders: `/home/workspace/data/train/`, `/home/workspace/data/val/`, and `/home/workspace/data/test/`
-* split the tf records files between these three folders by symbolically linking the files from `/home/workspace/data/waymo/` to `/home/workspace/data/train/`, `/home/workspace/data/val/`, and `/home/workspace/data/test/`
-
-Use the following command to run the script once your function is implemented:
+To split the dataset in three folder for cross-validation there is the `create_splits.py` file. This code will take all files in the `destination folder` and will create a  `destination folder `to store a folder for train data, another for validation and another for test.
+The proportion of validation and test can be passed as parameters when executing this function. This split function will randomly distribute all the data from the `source folder` to the `destination folder` respecting the selected proportion.
+ 
 ```
-python create_splits.py --data-dir /home/workspace/data
+python create_splits.py --destination data/waymo/splits --source data/waymo/training_and_validation_and_test --pval proportion_of_validation --ptest proportion_of_test
 ```
 
-### Edit the config file
 
-Now you are ready for training. As we explain during the course, the Tf Object Detection API relies on **config files**. The config that we will use for this project is `pipeline.config`, which is the config for a SSD Resnet 50 640x640 model. You can learn more about the Single Shot Detector [here](https://arxiv.org/pdf/1512.02325.pdf).
+### Config file of the model
 
-First, let's download the [pretrained model](http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8.tar.gz) and move it to `/home/workspace/experiments/pretrained_model/`.
+To train this model we will use a `pipeline.config` file, this file contains all the information to train and validate the model. We have the `pipeline.config` that has a SSD object detection architecture and `pipelinefrcnn.config` that has a Faster-RCNN object detection architecture.
+Due to the complexity of the model and the similarity with other models we will use the fine tune to start our model, because it is not worth starting from scratch, there are many parameters to find and we can use the previous knowledge of another model to start our model.
+
+To import the SSD pretrained model we can execute the following commands
+```
+cd experiments/pretrained_model/
+wget http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8.tar.gz
+tar -xvzf ssd_resnet50_v1_fpn_640x640_coco17_tpu-8.tar.gz
+rm -rf ssd_resnet50_v1_fpn_640x640_coco17_tpu-8.tar.gz
+```
+
+To import the Faster-RCNN pretrained  model we can execute the following commands
+```
+cd experiments/pretrained_model/
+wget http://download.tensorflow.org/models/object_detection/tf2/20200711/faster_rcnn_resnet50_v1_640x640_coco17_tpu-8.tar.gz
+tar -xvzf faster_rcnn_resnet50_v1_640x640_coco17_tpu-8.tar.gz
+rm -rf faster_rcnn_resnet50_v1_640x640_coco17_tpu-8.tar.gz
+```
 
 We need to edit the config files to change the location of the training and validation files, as well as the location of the label_map file, pretrained weights. We also need to adjust the batch size. To do so, run the following:
 ```
 python edit_config.py --train_dir /home/workspace/data/train/ --eval_dir /home/workspace/data/val/ --batch_size 2 --checkpoint /home/workspace/experiments/pretrained_model/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/checkpoint/ckpt-0 --label_map /home/workspace/experiments/label_map.pbtxt
 ```
-A new config file has been created, `pipeline_new.config`.
+A new config file has been created, `pipeline_new.config`. Copy `pipeline_new.config` in experiments/reference/.
+We will use this pipeline to train our model.
 
 ### Training
 

@@ -1,0 +1,29 @@
+download the pretrained model:
+
+SSD
+cd experiments/pretrained_model/
+wget http://download.tensorflow.org/models/object_detection/tf2/20200711/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8.tar.gz
+tar -xvzf ssd_resnet50_v1_fpn_640x640_coco17_tpu-8.tar.gz
+rm -rf ssd_resnet50_v1_fpn_640x640_coco17_tpu-8.tar.gz
+FRCNN
+cd experiments/pretrained_model/
+wget http://download.tensorflow.org/models/object_detection/tf2/20200711/faster_rcnn_resnet50_v1_640x640_coco17_tpu-8.tar.gz
+tar -xvzf faster_rcnn_resnet50_v1_640x640_coco17_tpu-8.tar.gz
+rm -rf faster_rcnn_resnet50_v1_640x640_coco17_tpu-8.tar.gz
+
+edit the config files:
+
+cd /home/workspace/
+python edit_config.py --train_dir data/waymo/train/ --eval_dir data/waymo/val/ --batch_size 2 --checkpoint experiments/pretrained_model/ssd_resnet50_v1_fpn_640x640_coco17_tpu-8/checkpoint/ckpt-0 --label_map experiments/label_map.pbtxt
+after copy pipeline_new in experiments/reference/
+python edit_config_frcnn.py --train_dir data/waymo/train/ --eval_dir data/waymo/val/ --batch_size 2 --checkpoint experiments/pretrained_model/faster_rcnn_resnet50_v1_640x640_coco17_tpu-8/checkpoint/ckpt-0 --label_map experiments/label_map.pbtxt
+after copy pipeline_new in experiments/experimentX/
+
+training process in reference folder:
+python experiments/model_main_tf2.py --model_dir=experiments/reference/ --pipeline_config_path=experiments/reference/pipeline_new.config
+python -m tensorboard.main --logdir experiments/reference/
+
+
+evaluating process in reference folder:
+python experiments/model_main_tf2.py --model_dir=experiments/reference/ --pipeline_config_path=experiments/reference/pipeline_new.config --checkpoint_dir=experiments/reference/
+

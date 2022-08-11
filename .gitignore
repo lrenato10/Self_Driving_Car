@@ -1,0 +1,17 @@
+# Ignore all Google Drive files
+*.ini
+
+# Ignore dataset folder
+Object_Detection_Project/data/waymo/
+
+# Ignore checkpoint files
+.checkpoint
+*.index
+*.data-00000-of-00001
+
+# Ignore pretrained models
+Object_Detection_Project/experiments/pretrained_model/
+
+# Ignore test files
+.test
+.verify_GPU

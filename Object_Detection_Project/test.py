@@ -8,6 +8,7 @@ import matplotlib.patches as patches
 import numpy as np
 import tensorflow as tf
 
+%matplotlib inline
 #%%
 path_data = "/home/Udacity/Self_Driving_Car/Object_Detection_Project/data/waymo/training_and_validation/*.tfrecord"
 dataset = get_dataset(path_data)
