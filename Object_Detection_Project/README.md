@@ -162,44 +162,37 @@ Each test is stored in the `experiments/experimentX/` folder, due to the memory 
 * In the follow figures we can see the result of the experiment92 (10 k steps and brightness data augmentation):
 ![img29](images/img29.png)![img30](images/img30.png)![img31](images/img31.png)
 
-* In the follow figures we can see the result of the experiment12 (Faster-RCNN):
+* In the follow figures we can see the result of the experiment8 (Faster-RCNN):
 ![img35](images/img35.png)![img36](images/img36.png)![img37](images/img37.png)
 
-We can see the positive impact in the precision and recall by using the data augmentation, the regularization loss is higher but this loss is just to prevent overfitting, it is not related with the performance of the model. Furthermore as the training model is in underfitting, when we increase the steps the performance also increase. Moreover, the performance of the Faster-RCNN is better due to its complexity, so the training already starts better than the SSD ones. We can`t see a visible improvement of Faster-RCNN loss but the final result is better because the pre-trained model has better performance.
+* In the follow figures we can see the result of the experiment82 (Faster-RCNN 25 k steps data augmentation brightness and grayscale):
+![img38](images/img38.png)![img39](images/img39.png)![img40](images/img40.png)
 
+
+We can see the positive impact in the precision and recall by using the data augmentation, the regularization loss is higher but this loss is just to prevent overfitting, it is not related with the performance of the model. Furthermore as the training model is in underfitting, when we increase the steps the performance also increase.
+Moreover, the performance of the Faster-RCNN is better due to its complexity, so the training already starts better than the SSD ones. We can`t see a visible improvement of Faster-RCNN loss but the final result is better because the pre-trained model has better performance. With the aim to generate the best model I created the experiment82 that unites data augmentation, more steps and the Faster-RCNN model.
+Furthermore, as the most import thing is detect all obstacles, so we should decrease the false negative rate, so the most import metric to analyze is the recall.
 
 ### Creating an animation
 #### Export the trained model
-Modify the arguments of the following function to adjust it to your models:
+Once the model has been trained we can export it to use it. In this example we will export experiment82, which is the best one.
+To export the trained model we can execute the following command:
 
 ```
-python experiments/exporter_main_v2.py --input_type image_tensor --pipeline_config_path experiments/reference/pipeline_new.config --trained_checkpoint_dir experiments/reference/ --output_directory experiments/reference/exported/
+python experiments/exporter_main_v2.py --input_type image_tensor --pipeline_config_path experiments/experiment82/pipeline_new.config --trained_checkpoint_dir experiments/experiment82/ --output_directory experiments/experiment82/exported/
 ```
 
 This should create a new folder `experiments/reference/exported/saved_model`. You can read more about the Tensorflow SavedModel format [here](https://www.tensorflow.org/guide/saved_model).
 
-Finally, you can create a video of your model's inferences for any tf record file. To do so, run the following command (modify it to your files):
+Finally, you can create a video of this model's inferences for any tf record file. I will take a tf record from the test folder to test the performance of this model. To do so, run the following command:
+
 ```
-python inference_video.py --labelmap_path label_map.pbtxt --model_path experiments/reference/exported/saved_model --tf_record_path /data/waymo/testing/segment-12200383401366682847_2552_140_2572_140_with_camera_labels.tfrecord --config_path experiments/reference/pipeline_new.config --output_path animation.gif
+python inference_video.py --labelmap_path label_map.pbtxt --model_path experiments/experiment82/exported/saved_model --tf_record_path data/waymo/test/segment-12200383401366682847_2552_140_2572_140_with_camera_labels.tfrecord --config_path experiments/experiment82/pipeline_new.config --output_path output_gif/animation.gif
 ```
 
-## Submission Template
+#### Final Result
 
-### Project overview
-This section should contain a brief description of the project and what we are trying to achieve. Why is object detection such an important component of self driving car systems?
-
-### Set up
-This section should contain a brief description of the steps to follow to run the code for this repository.
-
-### Dataset
-#### Dataset analysis
-This section should contain a quantitative and qualitative description of the dataset. It should include images, charts and other visualizations.
-#### Cross validation
-This section should detail the cross validation strategy and justify your approach.
-
-### Training
-#### Reference experiment
-This section should detail the results of the reference experiment. It should includes training metrics and a detailed explanation of the algorithm's performances.
-
-#### Improve on the reference
-This section should highlight the different strategies you adopted to improve your model. It should contain relevant figures and details of your findings.
+It is possible to see the final result of the Object Detection of vehicle, pedestrian and cyclist in the three following GIFs:
+![gif1](output_gif/animation1.gif)
+![gif2](output_gif/animation2.gif)
+![gif3](output_gif/animation8.gif)
