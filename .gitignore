@@ -1,6 +1,7 @@
 # Ignore all Google Drive files
 desktop.ini
 
+# ========= Object Detection =======================
 # Ignore dataset folder
 Object_Detection_Project/data/waymo/
 
@@ -15,3 +16,16 @@ Object_Detection_Project/experiments/pretrained_model/
 # Ignore test files
 .test
 .verify_GPU
+
+# ========= 3D Object Detection Sensor Fusion =======================
+# Ignore dataset folder
+3D_Object_Detection_Sensor_Fusion_Project/dataset
+
+# Ignore results
+3D_Object_Detection_Sensor_Fusion_Project/results
+
+# Ignore results pretrained darknet
+3D_Object_Detection_Sensor_Fusion_Project/tools/objdet_models/darknet/pretrained
+
+# Ignore results pretrained resnet
+3D_Object_Detection_Sensor_Fusion_Project/tools/objdet_models/resnet/pretrained
