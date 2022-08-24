@@ -77,7 +77,7 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.hm_size = (152, 152)
         configs.down_ratio = 4
         configs.max_objects = 50
-        configs.conf_thresh = 0.2
+        configs.conf_thresh = 0.5
 
         configs.imagenet_pretrained = False
         configs.head_conv = 64
@@ -237,15 +237,26 @@ def detect_objects(input_bev_maps, model, configs):
         ## step 2 : loop over all detections
         for object in detections:
             ## step 3 : perform the conversion using the limits for x, y and z set in the configs structure
-            scores, xs, ys, z_coor, dim, direction, clses, yaw= object
-            if ( (xs > configs.lim_x[0] and xs < configs.lim_x[1]) and 
-                (ys > configs.lim_y[0] and ys < configs.lim_y[1]) and 
-                (z_coor > configs.lim_z[0] and configs.z_coor < lim_z[1])):
-                object_converted = scores, xs, ys, z_coor, dim, direction, clses, yaw
+            # decode output = [scores, x_pix, y_pix, z_coor, dim, direction, clses, ya]
+            class_id, y_pix, x_pix, z, h, w_pix, l_pix, yaw = object
+            class_id = 1 # vehicle id
+            yaw = -yaw # reverse rotation direction
+            # convert pixel to meters to compare with lim that is in meters 
+            bev_discret = (configs.lim_x[1] - configs.lim_x[0]) / configs.bev_height # = (configs.lim_y[1] - configs.lim_y[0]) / configs.bev_width
+             # = (configs.lim_y[1] - configs.lim_y[0]) / configs.bev_width
+            w, l =  w_pix*bev_discret, l_pix*bev_discret # for the bounding box size
+            x, y=  x_pix * bev_discret, ( y_pix - (configs.bev_width + 1) / 2.0) * bev_discret # for the bounding box position          
+            
+        
+            if ( (x > configs.lim_x[0] and x < configs.lim_x[1]) and 
+                 (y > configs.lim_y[0] and y < configs.lim_y[1]) and 
+                 (z > configs.lim_z[0] and z < configs.lim_z[1])):
+                # pass to format [class_id = 1, x, y, z, h, w, l, yaw]
+                object_converted = class_id, x, y, z, h, w, l, yaw # reconstruct object with values in meters
                 ## step 4 : append the current object to the 'objects' array
                 objects.append(object_converted)
+                
     #######
     ####### ID_S3_EX2 START #######   
-    
     return objects    
 

@@ -44,7 +44,7 @@ from student.trackmanagement import Trackmanagement
 from student.association import Association
 from student.measurements import Sensor, Measurement
 from misc.evaluation import plot_tracks, plot_rmse, make_movie
-import misc.params as params 
+import misc.params as params    
  
 ##################
 ## Set parameters and perform initializations
@@ -185,7 +185,7 @@ while True:
 
         ## Visualization for object detection
         if 'show_range_image' in exec_list:
-            img_range = pcl.show_range_image(frame, lidar_name)
+            img_range = pcl.show_range_image(frame, lidar_name)  
             img_range = img_range.astype(np.uint8)
             cv2.imshow('range_image', img_range)
             cv2.waitKey(vis_pause_time)
