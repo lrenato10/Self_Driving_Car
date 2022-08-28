@@ -142,13 +142,13 @@ This project will show how to use the LIDAR data (Range Image) to produce a 3D P
 ## Compute Lidar Point-Cloud from Range Image
 ### Visualize range image channels (ID_S1_EX1)
 To prepare this task you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
--` model = "darknet"`
--` sequence = "1"`
--` show_only_frames = [0, 1] `
--` exec_data = [] `
--` exec_detection = [] `
--` exec_tracking = [] `
--` exec_visualization = ['show_range_image'] `
+- ` model = "darknet"`
+- ` sequence = "1"`
+- ` show_only_frames = [0, 1] `
+- ` exec_data = [] `
+- ` exec_detection = [] `
+- ` exec_tracking = [] `
+- ` exec_visualization = ['show_range_image'] `
 
 The resulting range image with handmade markings is shown below:
 <img src="img/img8.png"/>
@@ -157,13 +157,13 @@ The range image is in the top and the intensity is in the bottle of the figure. 
 
 ### Visualize point-cloud (ID_S1_EX2)
 To prepare this task you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
--` model = "darknet"`
--` sequence = "3"`
--` show_only_frames = [0, 200] `
--` exec_data = [] `
--` exec_detection = [] `
--` exec_tracking = [] `
--` exec_visualization = ['show_pcl'] `
+- ` model = "darknet"`
+- ` sequence = "3"`
+- ` show_only_frames = [0, 200] `
+- ` exec_data = [] `
+- ` exec_detection = [] `
+- ` exec_tracking = [] `
+- ` exec_visualization = ['show_pcl'] `
 
 The resulting 3D point-cloud in many differnts views with handmade markings is shown below:
 <img src="img/img9.png"/>
@@ -179,13 +179,13 @@ You can pass to the next frame by pressing the right arrow key, stop the image b
 
 ## Create Birds-Eye View from Lidar PCL
 To prepare the following three tasks you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
--` model = "darknet"`
--` sequence = "1"`
--` show_only_frames = [0, 1] `
--` exec_data = ['pcl_from_rangeimage'] `
--` exec_detection = ['bev_from_pcl'] `
--` exec_tracking = [] `
--` exec_visualization = [] `
+- ` model = "darknet"`
+- ` sequence = "1"`
+- ` show_only_frames = [0, 1] `
+- ` exec_data = ['pcl_from_rangeimage'] `
+- ` exec_detection = ['bev_from_pcl'] `
+- ` exec_tracking = [] `
+- ` exec_visualization = [] `
 
 If a segmentation fault message appears, hold the space bar key before PCL appears. To pass to the BEV image press the right arrow key. In BEV image press spacebar key to stop the image and press esc to jump for the next one.
 
@@ -204,13 +204,13 @@ The resulting image of height layer of birds-eye view (bev)-map is shown below:
 
 ## Model-based Object Detection in BEV Image
 To prepare these two following tasks you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
--` model = "fpn_resnet"`
--` sequence = "1"`
--` show_only_frames = [50, 51] `
--` exec_data = ['pcl_from_rangeimage', 'load_image'] `
--` exec_detection = ['bev_from_pcl', 'detect_objects'] `
--` exec_tracking = [] `
--` exec_visualization = ['show_objects_in_bev_labels_in_camera'] `
+- ` model = "fpn_resnet"`
+- ` sequence = "1"`
+- ` show_only_frames = [50, 51] `
+- ` exec_data = ['pcl_from_rangeimage', 'load_image'] `
+- ` exec_detection = ['bev_from_pcl', 'detect_objects'] `
+- ` exec_tracking = [] `
+- ` exec_visualization = ['show_objects_in_bev_labels_in_camera'] `
 
 ### Add a second model from a GitHub repo (ID_S3_EX1)
 From the [Super Fast and Accurate 3D Object Detection based on 3D LiDAR Point Clouds](https://github.com/maudzung/SFA3D) I create a second add a second object detection model called `fpn_resnet`.
@@ -219,18 +219,17 @@ The most relevant informations are available in `SFA3D->test.py->parse_test_conf
 ### Extract 3D bounding boxes from model response (ID_S3_EX2)
 With the fpn_resnet object detection configure we can detect the vehicles using the information of the BEV images like a RGB image, instead of the layers of colors we will use images layers maps of height, intensity and density, already calculated in the previous parts.
 We can see the result of the object detection in the following video using ` show_only_frames = [0, 150] ` and lidar_bev = pcl.bev_from_pcl(lidar_pcl, configs_det, False). The false disable PCL and BEV plots.
-![mpg4](img/video.mp4)
-<img src="img/video.mp4"/>
+<img src="img/detection.gif"/>
 
 ## Performance Evaluation for Object Detection
 To prepare these two following tasks you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
--` model = "fpn_resnet"`
--` sequence = "1"`
--` show_only_frames = [50, 51] `
--` exec_data = ['pcl_from_rangeimage'] `
--` exec_detection = ['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'] `
--` exec_tracking = [] `
--` exec_visualization = ['show_detection_performance'] `
+- ` model = "fpn_resnet"`
+- ` sequence = "1"`
+- ` show_only_frames = [50, 51] `
+- ` exec_data = ['pcl_from_rangeimage'] `
+- ` exec_detection = ['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'] `
+- ` exec_tracking = [] `
+- ` exec_visualization = ['show_detection_performance'] `
 ### Compute intersection-over-union (IOU) between labels and detections (ID_S4_EX1)
 Intersection-over-union (IOU) is a metric to measure how good the preditec bounding box is fitting to the label bounding box, it is calculated by `Intersection_of_bb/Union_of_bb`. A value equal to one means perfect fit and a value zeros means missed detection. Normally we use a threshold (min_iou=0.5) to classify a detection as a reliable detection.
 
@@ -245,13 +244,13 @@ The calculus of precision and recall can be done as follows
 - Recall = TP / (TP + FN) = TP / All_positives
 
 To prepare this last task you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
--` model = "fpn_resnet"`
--` sequence = "1"`
--` show_only_frames = [50, 150] `
--` exec_data = ['pcl_from_rangeimage'] `
--` exec_detection = ['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'] `
--` exec_tracking = [] `
--` exec_visualization = ['show_detection_performance'] `
+- ` model = "fpn_resnet"`
+- ` sequence = "1"`
+- ` show_only_frames = [50, 150] `
+- ` exec_data = ['pcl_from_rangeimage'] `
+- ` exec_detection = ['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'] `
+- ` exec_tracking = [] `
+- ` exec_visualization = ['show_detection_performance'] `
 
 In the following figure we can se the evaluation of 100 frames of the precision, recall, IOU and the error in each axis between the label and the detection. 
 With `precision = 0.9323, recall = 0.9444`
