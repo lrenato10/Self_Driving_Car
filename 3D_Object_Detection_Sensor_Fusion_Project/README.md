@@ -131,3 +131,133 @@ Parts of this project are based on the following repositories:
 
 ## License
 [License](LICENSE.md)
+
+
+# Mid-Term Project: 3D Object Detection
+
+## Project overview
+Object detection is a crucial  role in self-driving cars. In this project we will focus on 3D object detection with a LIDAR sensor which can improve the robustness of the object detection for self- driving cars.
+This project will show how to use the LIDAR data (Range Image) to produce a 3D Point-CLoud (PCL), with this PCL we can produce another view called Birds-Eye View  (BEV) , which is a 2D image which enable us to use a 2D object detection algorithm to detect objects in the 3D coordinate system, normally we use three layers of BEV image ( height, intensity and density maps). It will also show how to use the  "darknet" and "fpn_resnet" models to classify objects from a BEV image and how to calculate the performance evaluation using IOU, precision and recall metrics.
+
+## Compute Lidar Point-Cloud from Range Image
+### Visualize range image channels (ID_S1_EX1)
+To prepare this task you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
+-` model = "darknet"`
+-` sequence = "1"`
+-` show_only_frames = [0, 1] `
+-` exec_data = [] `
+-` exec_detection = [] `
+-` exec_tracking = [] `
+-` exec_visualization = ['show_range_image'] `
+
+The resulting range image with handmade markings is shown below:
+![img8](imag/img8.png)
+The range image is in the top and the intensity is in the bottle of the figure. With the insentity figure is easier to identify the vehicle features.
+
+
+### Visualize point-cloud (ID_S1_EX2)
+To prepare this task you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
+-` model = "darknet"`
+-` sequence = "3"`
+-` show_only_frames = [0, 200] `
+-` exec_data = [] `
+-` exec_detection = [] `
+-` exec_tracking = [] `
+-` exec_visualization = ['show_pcl'] `
+
+The resulting 3D point-cloud in many differnts views with handmade markings is shown below:
+![img9](imag/img9.png)![img10](imag/img10.png)![img11](imag/img11.png)![img12](imag/img12.png)![img13](imag/img13.png)![img14](imag/img14.png)
+
+In this imagens we can identify a van marked in purple, poles or trees in gray, car rearview mirror in orange, car headlight in pink, rear and bumper of the car in yellow, pickup truck wheels in green, rear of truck in red, truck body in blue and a road sign in light blue.
+We can also compare this vehicles features and objects with the range and intensity image of the previous part.
+
+You can pass to the next frame by pressing the right arrow key, stop the image by pressing space bar key, toggle to full with tab key and close with esc key.
+
+## Create Birds-Eye View from Lidar PCL
+To prepare the following three tasks you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
+-` model = "darknet"`
+-` sequence = "1"`
+-` show_only_frames = [0, 1] `
+-` exec_data = ['pcl_from_rangeimage'] `
+-` exec_detection = ['bev_from_pcl'] `
+-` exec_tracking = [] `
+-` exec_visualization = [] `
+
+If a segmentation fault message appears, hold the space bar key before PCL appears. To pass to the BEV image press the right arrow key. In BEV image press spacebar key to stop the image and press esc to jump for the next one.
+
+
+### Convert sensor coordinates to bev-map coordinates (ID_S2_EX1)
+The resulting image of the first step to create a birds-eye view (BEV) perspective of the lidar point-cloud is shown below:
+![img19](imag/img19.png)
+
+### Compute intensity layer of bev-map (ID_S2_EX2)
+The resulting image of intensity layer of birds-eye view (bev)-map is shown below:
+![img15](imag/img15.png)
+
+### Compute height layer of bev-map (ID_S2_EX3)
+The resulting image of height layer of birds-eye view (bev)-map is shown below:
+![img17](imag/img17.png)
+
+## Model-based Object Detection in BEV Image
+To prepare these two following tasks you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
+-` model = "fpn_resnet"`
+-` sequence = "1"`
+-` show_only_frames = [50, 51] `
+-` exec_data = ['pcl_from_rangeimage', 'load_image'] `
+-` exec_detection = ['bev_from_pcl', 'detect_objects'] `
+-` exec_tracking = [] `
+-` exec_visualization = ['show_objects_in_bev_labels_in_camera'] `
+
+### Add a second model from a GitHub repo (ID_S3_EX1)
+From the [Super Fast and Accurate 3D Object Detection based on 3D LiDAR Point Clouds](https://github.com/maudzung/SFA3D) I create a second add a second object detection model called `fpn_resnet`.
+The most relevant informations are available in `SFA3D->test.py->parse_test_configs()` to add them in the `configs` structure in `load_configs_model.`
+
+### Extract 3D bounding boxes from model response (ID_S3_EX2)
+With the fpn_resnet object detection configure we can detect the vehicles using the information of the BEV images like a RGB image, instead of the layers of colors we will use images layers maps of height, intensity and density, already calculated in the previous parts.
+We can see the result of the object detection in the following video using ` show_only_frames = [0, 150] ` and lidar_bev = pcl.bev_from_pcl(lidar_pcl, configs_det, False). The false disable PCL and BEV plots.
+![mpg4](img/video.mp4)
+
+## Performance Evaluation for Object Detection
+To prepare these two following tasks you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
+-` model = "fpn_resnet"`
+-` sequence = "1"`
+-` show_only_frames = [50, 51] `
+-` exec_data = ['pcl_from_rangeimage'] `
+-` exec_detection = ['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'] `
+-` exec_tracking = [] `
+-` exec_visualization = ['show_detection_performance'] `
+### Compute intersection-over-union (IOU) between labels and detections (ID_S4_EX1)
+Intersection-over-union (IOU) is a metric to measure how good the preditec bounding box is fitting to the label bounding box, it is calculated by `Intersection_of_bb/Union_of_bb`. A value equal to one means perfect fit and a value zeros means missed detection. Normally we use a threshold (min_iou=0.5) to classify a detection as a reliable detection.
+
+### Compute true-positive (TP), false-negatives (FN) and false-positives (FP) (ID_S4_EX2)
+- TP = all detections with iou > min_iou
+- FN = all positive labels - TP
+- FP = all detections - TP
+
+### Compute precision and recall (ID_S4_EX3)
+The calculus of precision and recall can be done as follows 
+- Precision = TP / (TP + FP) = TP / All_detections
+- Recall = TP / (TP + FN) = TP / All_positives
+
+To prepare this last task you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
+-` model = "fpn_resnet"`
+-` sequence = "1"`
+-` show_only_frames = [50, 150] `
+-` exec_data = ['pcl_from_rangeimage'] `
+-` exec_detection = ['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'] `
+-` exec_tracking = [] `
+-` exec_visualization = ['show_detection_performance'] `
+
+In the following figure we can se the evaluation of 100 frames of the precision, recall, IOU and the error in each axis between the label and the detection. 
+With `precision = 0.9323, recall = 0.9444`
+![img20](imag/img20.png)
+
+Changing ` model = "darknet"` we have the following result:
+With `precision = 1.0, recall = 0.8529`
+![img22](imag/img22.png)
+
+To make sure that the code produces plausible results we can use the following flag `configs_det.use_labels_as_objects = True` which will use groundtruth labels as objects. An we can validate the algorithm with the following result as expected:
+With `precision = 1.0, recall = 1.0`
+![img24](imag/img24.png)
+
+
