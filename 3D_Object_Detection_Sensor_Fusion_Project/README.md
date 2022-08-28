@@ -4,7 +4,7 @@ This is the project for the second course in the  [Udacity Self-Driving Car Engi
 
 In this project, you'll fuse measurements from LiDAR and camera and track vehicles over time. You will be using real-world data from the Waymo Open Dataset, detect objects in 3D point clouds and apply an extended Kalman filter for sensor fusion and tracking.
 
-![img_title_1](imag/img_title_1.jpeg)
+<img src="img/img_title_1.jpeg"/>
 
 The project consists of two major parts: 
 1. **Object detection**: In this part, a deep-learning approach is used to detect vehicles in LiDAR data based on a birds-eye view perspective of the 3D point-cloud. Also, a series of performance measures is used to evaluate the performance of the detection approach. 
@@ -12,7 +12,7 @@ The project consists of two major parts:
 
 The following diagram contains an outline of the data flow and of the individual steps that make up the algorithm. 
 
-![img_title_2_new](img_title_2_new.png)
+<img src="img/img_title_2_new.png"/>
 
 Also, the project code contains various tasks, which are detailed step-by-step in the code. More information on the algorithm and on the tasks can be found in the Udacity classroom. 
 
@@ -151,7 +151,7 @@ To prepare this task you should set the following parameters in `loop_over_datas
 -` exec_visualization = ['show_range_image'] `
 
 The resulting range image with handmade markings is shown below:
-![img8](imag/img8.png)
+<img src="img/img8.png"/>
 The range image is in the top and the intensity is in the bottle of the figure. With the insentity figure is easier to identify the vehicle features.
 
 
@@ -166,8 +166,12 @@ To prepare this task you should set the following parameters in `loop_over_datas
 -` exec_visualization = ['show_pcl'] `
 
 The resulting 3D point-cloud in many differnts views with handmade markings is shown below:
-![img9](imag/img9.png)![img10](imag/img10.png)![img11](imag/img11.png)![img12](imag/img12.png)![img13](imag/img13.png)![img14](imag/img14.png)
-
+<img src="img/img9.png"/>
+<img src="img/img10.png"/>
+<img src="img/img11.png"/>
+<img src="img/img12.png"/>
+<img src="img/img13.png"/>
+<img src="img/img14.png"/>
 In this imagens we can identify a van marked in purple, poles or trees in gray, car rearview mirror in orange, car headlight in pink, rear and bumper of the car in yellow, pickup truck wheels in green, rear of truck in red, truck body in blue and a road sign in light blue.
 We can also compare this vehicles features and objects with the range and intensity image of the previous part.
 
@@ -188,15 +192,15 @@ If a segmentation fault message appears, hold the space bar key before PCL appea
 
 ### Convert sensor coordinates to bev-map coordinates (ID_S2_EX1)
 The resulting image of the first step to create a birds-eye view (BEV) perspective of the lidar point-cloud is shown below:
-![img19](imag/img19.png)
+<img src="img/img19.png"/>
 
 ### Compute intensity layer of bev-map (ID_S2_EX2)
 The resulting image of intensity layer of birds-eye view (bev)-map is shown below:
-![img15](imag/img15.png)
+<img src="img/img15.png"/>
 
 ### Compute height layer of bev-map (ID_S2_EX3)
 The resulting image of height layer of birds-eye view (bev)-map is shown below:
-![img17](imag/img17.png)
+<img src="img/img17.png"/>
 
 ## Model-based Object Detection in BEV Image
 To prepare these two following tasks you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
@@ -216,6 +220,7 @@ The most relevant informations are available in `SFA3D->test.py->parse_test_conf
 With the fpn_resnet object detection configure we can detect the vehicles using the information of the BEV images like a RGB image, instead of the layers of colors we will use images layers maps of height, intensity and density, already calculated in the previous parts.
 We can see the result of the object detection in the following video using ` show_only_frames = [0, 150] ` and lidar_bev = pcl.bev_from_pcl(lidar_pcl, configs_det, False). The false disable PCL and BEV plots.
 ![mpg4](img/video.mp4)
+<img src="img/video.mp4"/>
 
 ## Performance Evaluation for Object Detection
 To prepare these two following tasks you should set the following parameters in `loop_over_dataset.py` between lines 51 and 61:
@@ -250,14 +255,14 @@ To prepare this last task you should set the following parameters in `loop_over_
 
 In the following figure we can se the evaluation of 100 frames of the precision, recall, IOU and the error in each axis between the label and the detection. 
 With `precision = 0.9323, recall = 0.9444`
-![img20](imag/img20.png)
+<img src="img/img20.png"/>
 
 Changing ` model = "darknet"` we have the following result:
 With `precision = 1.0, recall = 0.8529`
-![img22](imag/img22.png)
+<img src="img/img22.png"/>
 
 To make sure that the code produces plausible results we can use the following flag `configs_det.use_labels_as_objects = True` which will use groundtruth labels as objects. An we can validate the algorithm with the following result as expected:
 With `precision = 1.0, recall = 1.0`
-![img24](imag/img24.png)
+<img src="img/img24.png"/>
 
 
