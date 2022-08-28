@@ -48,10 +48,18 @@ import misc.params as params
  
 ##################
 ## Set parameters and perform initializations
-show_only_frames = [50, 51] # show only frames in interval for debugging
+show_only_frames = [50, 150] # show only frames in interval for debugging
+
+## Selective execution and visualization
+exec_data = ['pcl_from_rangeimage']
+exec_detection = ['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'] # options are 'bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'; options not in the list will be loaded from file (results)
+exec_tracking = [] # options are 'perform_tracking'
+exec_visualization =  ['show_detection_performance'] # options are 'show_range_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie'
+exec_list = make_exec_list(exec_detection, exec_tracking, exec_visualization)
+vis_pause_time = 0 # set pause time between frames in ms (0 = stop between frames until key is pressed)
 
 ## Prepare Waymo Open Dataset file for loading
-model = "fpn_resnet" # "darknet" or "fpn_resnet"
+model = "darknet" # "darknet" or "fpn_resnet"
 sequence = "1" # "1", "2" or "3"
 ## Select Waymo Open Dataset file and frame numbers
 if sequence == "1":
@@ -84,20 +92,12 @@ lidar = None # init lidar sensor object
 camera = None # init camera sensor object
 np.random.seed(10) # make random values predictable
 
-## Selective execution and visualization
-exec_data = ['pcl_from_rangeimage', 'load_image']
-exec_detection = ['bev_from_pcl', 'detect_objects'] #['bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'] # options are 'bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'; options not in the list will be loaded from file (results)
-exec_tracking = [] # options are 'perform_tracking'
-exec_visualization = ['show_objects_in_bev_labels_in_camera'] # options are 'show_range_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie'
-exec_list = make_exec_list(exec_detection, exec_tracking, exec_visualization)
-vis_pause_time = 0 # set pause time between frames in ms (0 = stop between frames until key is pressed)
-
 
 ##################
 ## Perform detection & tracking over all selected frames
 
 cnt_frame = 0 
-all_labels = []
+all_labels = [] 
 det_performance_all = [] 
 np.random.seed(0) # make random values predictable
 if 'show_tracks' in exec_list:    
@@ -283,7 +283,7 @@ while True:
 
 ## Evaluate object detection performance
 if 'show_detection_performance' in exec_list:
-    eval.compute_performance_stats(det_performance_all, configs_det)
+    eval.compute_performance_stats(det_performance_all)
 
 ## Plot RMSE for all tracks
 if 'show_tracks' in exec_list:

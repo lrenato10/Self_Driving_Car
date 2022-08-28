@@ -134,6 +134,8 @@ def load_configs(model_name='fpn_resnet', configs=None):
     configs.output_width = 608 # width of result image (height may vary)
     configs.obj_colors = [[0, 255, 255], [0, 0, 255], [255, 0, 0]] # 'Pedestrian': 0, 'Car': 1, 'Cyclist': 2
 
+    configs.min_iou = 0.5
+    
     return configs
 
 
@@ -237,7 +239,8 @@ def detect_objects(input_bev_maps, model, configs):
         ## step 2 : loop over all detections
         for object in detections:
             ## step 3 : perform the conversion using the limits for x, y and z set in the configs structure
-            # decode output = [scores, x_pix, y_pix, z_coor, dim, direction, clses, ya]
+            # decode() output = [scores, x_pix, y_pix, z_coor, dim, direction, clses, ya]
+            # post_processing() output = x, y, z, h, w, l, yaw
             class_id, y_pix, x_pix, z, h, w_pix, l_pix, yaw = object
             class_id = 1 # vehicle id
             yaw = -yaw # reverse rotation direction

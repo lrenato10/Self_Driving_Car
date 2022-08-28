@@ -293,6 +293,7 @@ def convert_labels_into_objects(object_labels, configs):
 
 # compute location of each corner of a box and returns [front_left, rear_left, rear_right, front_right]
 def compute_box_corners(x,y,w,l,yaw):
+    yaw=float(yaw)
     cos_yaw = np.cos(yaw)
     sin_yaw = np.sin(yaw)
     
