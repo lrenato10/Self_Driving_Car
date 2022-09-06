@@ -48,17 +48,18 @@ import misc.params as params
  
 ##################
 ## Selective execution and visualization
-exec_data = ['pcl_from_rangeimage', 'load_image']
-exec_detection = ['bev_from_pcl', 'detect_objects'] # options are 'bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'; options not in the list will be loaded from file (results)
-exec_tracking = [] # options are 'perform_tracking'
-exec_visualization =  ['show_objects_in_bev_labels_in_camera'] # options are 'show_range_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie'
+exec_data = []
+exec_detection = [] # options are 'bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'; options not in the list will be loaded from file (results)
+exec_tracking = ['perform_tracking'] # options are 'perform_tracking'
+exec_visualization =  ['show_tracks'] # options are 'show_range_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie'
 exec_list = make_exec_list(exec_detection, exec_tracking, exec_visualization)
 vis_pause_time = 0 # set pause time between frames in ms (0 = stop between frames until key is pressed)
 
 ## Prepare Waymo Open Dataset file for loading
-model = "darknet" # "darknet" or "fpn_resnet"
-sequence = "1" # "1", "2" or "3"
-show_only_frames = [50, 51] # show only frames in interval for debugging
+model = "fpn_resnet" # "darknet" or "fpn_resnet"
+sequence = "2" # "1", "2" or "3"
+show_only_frames = [150, 200] # show only frames in interval for debugging
+final_project = True
 ## Select Waymo Open Dataset file and frame numbers
 if sequence == "1":
     data_filename = 'training_segment-1005081002024129653_5313_150_5333_150_with_camera_labels.tfrecord' # Sequence 1
@@ -68,7 +69,10 @@ elif sequence == "3":
     data_filename = 'training_segment-10963653239323173269_1924_000_1944_000_with_camera_labels.tfrecord' # Sequence 3
 
 data_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'dataset', data_filename) # adjustable path in case this script is called from another working directory
-results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results/' + model + '/results_sequence_' + sequence + '_' + model)
+if final_project:
+    results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results/' + 'Lidar_Detections_Tracking_Final_Project')
+else:
+    results_fullpath = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'results/' + model + '/results_sequence_' + sequence + '_' + model)
 datafile = WaymoDataFileReader(data_fullpath)
 datafile_iter = iter(datafile)  # initialize dataset iterator
 
@@ -80,7 +84,7 @@ configs_det.use_labels_as_objects = False # True = use groundtruth labels as obj
 configs_det.save_results = False # save results to file (based on data_filename)
 
 ## Uncomment this setting to restrict the y-range in the final project
-# configs_det.lim_y = [-25, 25] 
+configs_det.lim_y = [-5, 10] 
 
 ## Initialize tracking
 KF = Filter() # set up Kalman filter 
