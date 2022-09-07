@@ -58,7 +58,7 @@ vis_pause_time = 0 # set pause time between frames in ms (0 = stop between frame
 ## Prepare Waymo Open Dataset file for loading
 model = "fpn_resnet" # "darknet" or "fpn_resnet"
 sequence = "2" # "1", "2" or "3"
-show_only_frames = [150, 200] # show only frames in interval for debugging
+show_only_frames = [65, 100] # show only frames in interval for debugging
 final_project = True
 ## Select Waymo Open Dataset file and frame numbers
 if sequence == "1":
@@ -84,7 +84,7 @@ configs_det.use_labels_as_objects = False # True = use groundtruth labels as obj
 configs_det.save_results = False # save results to file (based on data_filename)
 
 ## Uncomment this setting to restrict the y-range in the final project
-configs_det.lim_y = [-5, 10] 
+configs_det.lim_y = [-5, 15] 
 
 ## Initialize tracking
 KF = Filter() # set up Kalman filter 
