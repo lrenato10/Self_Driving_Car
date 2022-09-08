@@ -51,14 +51,14 @@ import misc.params as params
 exec_data = []
 exec_detection = [] # options are 'bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'; options not in the list will be loaded from file (results)
 exec_tracking = ['perform_tracking'] # options are 'perform_tracking'
-exec_visualization =  ['show_tracks'] # options are 'show_range_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie'
+exec_visualization =  ['show_tracks', 'make_tracking_movie'] # options are 'show_range_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie'
 exec_list = make_exec_list(exec_detection, exec_tracking, exec_visualization)
 vis_pause_time = 0 # set pause time between frames in ms (0 = stop between frames until key is pressed)
 
 ## Prepare Waymo Open Dataset file for loading
 model = "fpn_resnet" # "darknet" or "fpn_resnet"
-sequence = "2" # "1", "2" or "3"
-show_only_frames = [65, 100] # show only frames in interval for debugging
+sequence = "1" # "1", "2" or "3"
+show_only_frames = [0, 200] # show only frames in interval for debugging
 final_project = True
 ## Select Waymo Open Dataset file and frame numbers
 if sequence == "1":
@@ -84,7 +84,7 @@ configs_det.use_labels_as_objects = False # True = use groundtruth labels as obj
 configs_det.save_results = False # save results to file (based on data_filename)
 
 ## Uncomment this setting to restrict the y-range in the final project
-configs_det.lim_y = [-5, 15] 
+configs_det.lim_y = [-25, 25] 
 
 ## Initialize tracking
 KF = Filter() # set up Kalman filter 
