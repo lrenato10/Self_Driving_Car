@@ -102,7 +102,8 @@ class Association:
         ############
         
         # check if measurement lies inside gate
-        limit = chi2.ppf(0.99, df=2)
+        df = sensor.dim_meas# degree of freedom = dimension of z
+        limit = chi2.ppf(0.99, df)
         if MHD < limit:
             return True
         else:

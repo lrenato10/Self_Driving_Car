@@ -140,13 +140,16 @@ class Sensor:
         ############
         # TODO Step 4: remove restriction to lidar in order to include camera as well
         ############
+        
         '''
+        # Only lidar sensor measurements will be used
         if self.name == 'lidar':
             meas = Measurement(num_frame, z, self)
             meas_list.append(meas)
         return meas_list
         '''
 
+    
         meas = Measurement(num_frame, z, self)
         meas_list.append(meas)
         
