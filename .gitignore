@@ -30,3 +30,10 @@ Object_Detection_Project/experiments/pretrained_model/
 
 # Ignore results pretrained resnet
 3D_Object_Detection_Sensor_Fusion_Project/tools/objdet_models/resnet/pretrained
+
+# ========= Localization =======================
+# Ignore Rpclib
+Localization_Project/rpclib
+
+# Ignore map
+map_loop.pcd
