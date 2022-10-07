@@ -1,5 +1,6 @@
 # Ignore all Google Drive files
 desktop.ini
+*.Identifier
 
 # ========= Object Detection =======================
 # Ignore dataset folder
