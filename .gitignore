@@ -35,5 +35,9 @@ Object_Detection_Project/experiments/pretrained_model/
 # Ignore Rpclib
 Localization_Project/rpclib
 
+# Ignore Rpclib
+Localization_Project/libcarla-install
+
 # Ignore map
-map_loop.pcd
+Localization_Project/map_loop.pcd
+Localization_Project/map.pcd
