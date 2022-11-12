@@ -45,5 +45,12 @@ Localization_Project/map.pcd
 # ========= Planning =======================
 # Ignore Carla lib
 Planning_Project/project/starter_files/libcarla-install
+
+# Ignore rpclib
+Planning_Project/project/starter_files/rpclib
+
+# Ignore eigen
+Planning_Project/project/starter_files/eigen-3.3.7
+
 # Ignore server dir
 Planning_Project/project/cserver_dir
