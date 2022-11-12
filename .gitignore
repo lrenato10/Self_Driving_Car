@@ -41,3 +41,9 @@ Localization_Project/libcarla-install
 # Ignore map
 Localization_Project/map_loop.pcd
 Localization_Project/map.pcd
+
+# ========= Planning =======================
+# Ignore Carla lib
+Planning_Project/project/starter_files/libcarla-install
+# Ignore server dir
+Planning_Project/project/cserver_dir
