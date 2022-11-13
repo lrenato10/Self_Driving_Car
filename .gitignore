@@ -42,15 +42,15 @@ Localization_Project/libcarla-install
 Localization_Project/map_loop.pcd
 Localization_Project/map.pcd
 
-# ========= Planning =======================
+# ========= Planning and Control =======================
 # Ignore Carla lib
-Planning_Project/project/starter_files/libcarla-install
+libcarla-install
 
 # Ignore rpclib
-Planning_Project/project/starter_files/rpclib
+rpclib
 
 # Ignore eigen
-Planning_Project/project/starter_files/eigen-3.3.7
+eigen-3.3.7
 
 # Ignore server dir
-Planning_Project/project/cserver_dir
+cserver_dir
