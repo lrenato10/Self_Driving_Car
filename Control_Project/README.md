@@ -101,10 +101,12 @@ Is possible to plot the saved values using the command (inside /project):
 ```
 python3 plot_pid.py
 ```
-* Steering Control
+- Steering Control
 <img src="project/pid_controller/screenshot/Steering_Control.png"/>
-* Throttle Control
+
+- Throttle Control
 <img src="project/pid_controller/screenshot/Throttle_Control.png"/>
+
 Throttle and brake are complementary and inversely proportional.
 
 This system is not easy to control because is a Multiple-Input Multiple-Output (MIMO) and it is also coupled (the steer and throttle are not 100% independent because the steer depends on the x and y position that are modified by the throttle).

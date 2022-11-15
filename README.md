@@ -1,6 +1,7 @@
 # Self_Driving_Car
 Udacity Self Driving Car Nanodegree, there is a:
-* Object Detection Project
-* 3D Object Detection and Sensor Fusion Project
+* Object Detection (Camera) Project
+* 3D Object Detection (LIDAR) and Sensor Fusion (Camera + LIDAR) Project
 * Localization with LIDAR Project
-* Behavior and Motion Planning
+* Behavior and Motion Planning Project
+* Steering and Throttle Control Project 
